@@ -1,26 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {connect} from "react-redux";
+import {addBook} from "actions/books";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App({books, addBook}) {
+    const newBook = {id: 1, title: "Новая"};
+    return (
+        <>
+            <ul>
+                {books.map(book => <li key={`book-${book.id}`}>{book.title}</li>)}
+            </ul>
+            <button onClick={() => addBook(newBook)}>Новая</button>
+        </>
+    );
 }
 
-export default App;
+export {App};
+
+const mapStateToProps = (state) => ({...state});
+
+const mapDispatchToProps = dispatch => ({
+    addBook: books => dispatch(addBook(books))
+});
+export default connect(mapStateToProps, mapDispatchToProps)(App);
