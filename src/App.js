@@ -1,24 +1,34 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import {connect} from "react-redux";
-import {addBook} from "actions/books";
+import {setBooks} from "actions/books";
+import axios from 'axios';
 
-function App({books, addBook}) {
-    const newBook = {id: 1, title: "Новая"};
-    return (
-        <>
+class App extends PureComponent {
+    componentWillMount() {
+        const {setBooks} = this.props;
+        axios.get("/mocks/books.json").then(({data}) => setBooks(data))
+    }
+
+
+    render() {
+        const {books, isReady} = this.props;
+        return <>
             <ul>
-                {books.map(book => <li key={`book-${book.id}`}>{book.title}</li>)}
+                {!isReady
+                    ?
+                    "Загрузка"
+                    :
+                    books.map(book => <li key={`book-${book.id}`}><strong>{book.title}</strong> - {book.author}</li>)}
             </ul>
-            <button onClick={() => addBook(newBook)}>Новая</button>
-        </>
-    );
+        </>;
+    }
 }
 
 export {App};
 
-const mapStateToProps = (state) => ({...state});
+const mapStateToProps = ({books}) => ({books: books.items, isReady: books.isReady});
 
 const mapDispatchToProps = dispatch => ({
-    addBook: books => dispatch(addBook(books))
+    setBooks: books => dispatch(setBooks(books))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(App);

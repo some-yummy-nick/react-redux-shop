@@ -1,13 +1,23 @@
-import {ADD_BOOK} from "../constants";
+import {SET_BOOKS, SET_IS_READY} from "../constants";
 
-const initialState = [{id: 0, title: "Тихий Дон"}];
+const initialState = {
+    isReady: false,
+    items: null
+};
+
 export default (state = initialState, action) => {
     switch (action.type) {
-        case ADD_BOOK:
-            return [
+        case SET_BOOKS:
+            return {
                 ...state,
-                action.payload
-            ];
+                items: action.payload,
+                isReady: true
+            };
+        case SET_IS_READY:
+            return {
+                ...state,
+                isReady: action.payload
+            };
         default:
             return state;
     }
