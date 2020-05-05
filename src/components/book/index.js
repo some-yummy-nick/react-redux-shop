@@ -1,9 +1,10 @@
 import React from 'react'
-import {Card, Icon, Image} from 'semantic-ui-react';
+import {Card, Icon, Image, Button} from 'semantic-ui-react';
 import {addBookToCart} from "../../actions/cart";
 import {connect} from "react-redux";
 
-const Book = ({image, title, author, price}) => {
+const Book = ({book, count, addBookToCart}) => {
+    const {image, title, author, price} = book;
     return <Card>
         <Image src={image} wrapped/>
         <Card.Content>
@@ -16,16 +17,18 @@ const Book = ({image, title, author, price}) => {
             <Icon name='rub'/>
             <b>{price}</b>
         </Card.Content>
+        <Button onClick={() => addBookToCart(book)}>Добавить в корзину {count > 0 && `(${count})`}</Button>
     </Card>
 };
 
 export {Book};
 
-const mapStateToProps = () => {
-};
+const mapStateToProps = ({cart}, {book}) => ({
+    count: cart.items.reduce((a, item) => a + (item.id === book.id ? 1 : 0), 0)
+});
 
 const mapDispatchToProps = dispatch => ({
-    addBook: book => dispatch(addBookToCart(book))
+    addBookToCart: book => dispatch(addBookToCart(book))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Book);

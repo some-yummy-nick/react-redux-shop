@@ -1,14 +1,13 @@
 import React, {PureComponent} from 'react';
 import {connect} from "react-redux";
 import {setBooks} from "actions/books";
-import {setFilter, setQuery} from "actions/filter";
 import axios from 'axios';
 import orderBy from "lodash/orderBy";
 import {Container, Card} from "semantic-ui-react";
 import "./app.scss";
 import Menu from "components/menu";
-import {Book} from "components/book";
-import {Filter} from "components/filter";
+import Book from "components/book";
+import Filter from "components/filter";
 
 class App extends PureComponent {
     componentWillMount() {
@@ -17,16 +16,16 @@ class App extends PureComponent {
     }
 
     render() {
-        const {books, isReady, setFilter, filterBy, query, setQuery} = this.props;
+        const {books, isReady} = this.props;
         return <Container>
             <Menu/>
-            <Filter setFilter={setFilter} filterBy={filterBy} setQuery={setQuery} query={query}/>
+            <Filter/>
             <Card.Group itemsPerRow={4}>
                 {!isReady
                     ?
                     "Загрузка"
                     :
-                    books.map(book => <Book key={`book-${book.id}`} {...book}/>)}
+                    books.map(book => <Book key={`book-${book.id}`} book={book}/>)}
             </Card.Group>
         </Container>;
     }
@@ -44,14 +43,10 @@ const searchBooks = (books, filterBy, query) => sortBy(filterBooks(books, query)
 const mapStateToProps = ({books, filter}) => ({
     books: books.items && searchBooks(books.items, filter.filterBy, filter.query),
     isReady: books.isReady,
-    filterBy: books.filterBy,
-    query: filter.query
 });
 
 const mapDispatchToProps = dispatch => ({
     setBooks: books => dispatch(setBooks(books)),
-    setFilter: filter => dispatch(setFilter(filter)),
-    setQuery: query => dispatch(setQuery(query))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
