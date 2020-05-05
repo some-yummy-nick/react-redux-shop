@@ -10,7 +10,7 @@ import Book from "components/book";
 import Filter from "components/filter";
 
 class App extends PureComponent {
-    componentWillMount() {
+    componentDidMount() {
         const {setBooks} = this.props;
         axios.get("/mocks/books.json").then(({data}) => setBooks(data))
     }
