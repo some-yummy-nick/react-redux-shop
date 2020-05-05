@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from "react-redux";
 import {setBooks} from "actions/books";
-import {setFilter} from "actions/filter";
+import {setFilter, setQuery} from "actions/filter";
 import axios from 'axios';
 import orderBy from "lodash/orderBy";
 import {Container, Card} from "semantic-ui-react";
@@ -17,10 +17,10 @@ class App extends PureComponent {
     }
 
     render() {
-        const {books, isReady, setFilter, filterBy} = this.props;
+        const {books, isReady, setFilter, filterBy, query, setQuery} = this.props;
         return <Container>
             <Menu/>
-            <Filter setFilter={setFilter} filterBy={filterBy}/>
+            <Filter setFilter={setFilter} filterBy={filterBy} setQuery={setQuery} query={query}/>
             <Card.Group itemsPerRow={4}>
                 {!isReady
                     ?
@@ -34,19 +34,24 @@ class App extends PureComponent {
 
 export {App};
 
-const sortBy = (books, filterBy) => {
-    return orderBy(books, filterBy, "DESC");
-};
+const filterBooks = (books, query) =>
+    books.filter(o => o.title.toLowerCase().indexOf(query.toLowerCase()) >= 0 || o.author.toLowerCase().indexOf(query.toLowerCase()) >= 0);
 
-const mapStateToProps = ({books}) => ({
-    books: sortBy(books.items, books.filterBy),
+const sortBy = (books, filterBy) => orderBy(books, filterBy, "DESC");
+
+const searchBooks = (books, filterBy, query) => sortBy(filterBooks(books, query), filterBy);
+
+const mapStateToProps = ({books, filter}) => ({
+    books: books.items && searchBooks(books.items, filter.filterBy, filter.query),
     isReady: books.isReady,
-    filterBy: books.filterBy
+    filterBy: books.filterBy,
+    query: filter.query
 });
 
 const mapDispatchToProps = dispatch => ({
     setBooks: books => dispatch(setBooks(books)),
-    setFilter: filter => dispatch(setFilter(filter))
+    setFilter: filter => dispatch(setFilter(filter)),
+    setQuery: query => dispatch(setQuery(query))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

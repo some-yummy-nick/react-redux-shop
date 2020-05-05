@@ -21,6 +21,6 @@ const MainMenu = ({length}) =>
 
 export {MainMenu};
 
-const mapStateToProps = ({cart}) => ({length: cart.items.length,});
+const mapStateToProps = ({cart}) => ({length: cart.items.length});
 
 export default connect(mapStateToProps)(MainMenu);
