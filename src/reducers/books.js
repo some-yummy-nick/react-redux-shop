@@ -1,8 +1,9 @@
-import {SET_BOOKS, SET_IS_READY} from "../constants";
+import {SET_BOOKS,SET_FILTER} from "../constants";
 
 const initialState = {
     isReady: false,
-    items: null
+    items: null,
+    filterBy: ""
 };
 
 export default (state = initialState, action) => {
@@ -13,10 +14,10 @@ export default (state = initialState, action) => {
                 items: action.payload,
                 isReady: true
             };
-        case SET_IS_READY:
+            case SET_FILTER:
             return {
                 ...state,
-                isReady: action.payload
+                filterBy: action.payload
             };
         default:
             return state;
