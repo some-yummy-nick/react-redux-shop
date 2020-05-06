@@ -1,26 +1,48 @@
 import React from 'react';
-import {Input, Menu} from 'semantic-ui-react';
+import {Icon, Input, Menu} from 'semantic-ui-react';
 import {setFilter, setQuery} from "../../actions/filter";
 import {connect} from "react-redux";
+import {Card} from "semantic-ui-react/dist/commonjs/views/Card";
+
+const Item = ({filterBy, setFilter, name, children}) =>
+    <Menu.Item
+        name={name}
+        active={filterBy.name === name}
+        onClick={() => setFilter(name)}
+    >{children}
+        {filterBy.name === name && !filterBy.isReversed &&
+        <Icon name='long arrow alternate up'/>
+        }
+        {filterBy.name !== "" && filterBy.name === name && filterBy.isReversed &&
+        <Icon name='long arrow alternate down'/>
+        }
+    </Menu.Item>;
+
+const filters = [
+    {
+        title: "price",
+        text: "Цена"
+    }, {
+        title: "title",
+        text: "Название"
+    }, {
+        title: "author",
+        text: "Автор"
+    },
+];
 
 const Filter = ({setFilter, filterBy, query, setQuery}) =>
     <Menu pointing>
         <Menu.Item header>Фильтр:</Menu.Item>
-        <Menu.Item
-            name='price'
-            active={filterBy === "price"}
-            onClick={() => setFilter("price")}
-        >Цена</Menu.Item>
-        <Menu.Item
-            name='title'
-            active={filterBy === 'title'}
-            onClick={() => setFilter("title")}
-        >Название</Menu.Item>
-        <Menu.Item
-            name='author'
-            active={filterBy === 'author'}
-            onClick={() => setFilter("author")}
-        >Автор</Menu.Item>
+        {
+            filters.map((filter, i) =>
+                <Item key={`filter-${i}`}
+                      filterBy={filterBy}
+                      setFilter={setFilter}
+                      name={filter.title}>
+                    {filter.text}
+                </Item>)
+        }
         <Menu.Menu position='right'>
             <Menu.Item>
                 <Input icon='search' value={query} onChange={e => setQuery(e.target.value)}
@@ -31,8 +53,8 @@ const Filter = ({setFilter, filterBy, query, setQuery}) =>
 
 export {Filter};
 
-const mapStateToProps = ({books, filter}) => ({
-    filterBy: books.filterBy,
+const mapStateToProps = ({filter}) => ({
+    filterBy: filter.filterBy,
     query: filter.query
 });
 

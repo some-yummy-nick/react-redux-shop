@@ -36,7 +36,7 @@ export {App};
 const filterBooks = (books, query) =>
     books.filter(o => o.title.toLowerCase().indexOf(query.toLowerCase()) >= 0 || o.author.toLowerCase().indexOf(query.toLowerCase()) >= 0);
 
-const sortBy = (books, filterBy) => orderBy(books, filterBy, "DESC");
+const sortBy = (books, filterBy) => orderBy(books, filterBy.name, filterBy.isReversed ? "asc" : "desc");
 
 const searchBooks = (books, filterBy, query) => sortBy(filterBooks(books, query), filterBy);
 

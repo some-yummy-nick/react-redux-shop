@@ -1,5 +1,5 @@
 import React from "react";
-import {Menu, Popup, List, Button, Image} from "semantic-ui-react";
+import {Menu, Popup, List, Button, Image, Sticky} from "semantic-ui-react";
 import {connect} from "react-redux";
 import uniqBy from "lodash/uniqBy";
 import {removeBookFromCart} from "../../actions/cart";
@@ -20,32 +20,35 @@ const CartComponent = ({book, removeBookFromCart}) => {
 };
 
 const MainMenu = ({length, sum, items, removeBookFromCart}) =>
-    <Menu>
-        <Menu.Item name='store'>
-            Магазин книг
-        </Menu.Item>
-
-        <Menu.Menu position='right'>
-            <Menu.Item name='sum'>
-                Итого&nbsp;<b>{sum}</b>&nbsp;руб.
+    <Sticky>
+        <Menu>
+            <Menu.Item name='store'>
+                Магазин книг
             </Menu.Item>
-            <Popup
-                style={style}
-                trigger={
-                    <Menu.Item name='cart'>
-                        Корзина&nbsp;<b>({length})</b>
-                    </Menu.Item>
-                }
-                content={<List selection divided verticalAlign='middle'>
-                    {items.map(item =>
-                        <CartComponent book={item} key={`cart-${item.id}`} removeBookFromCart={removeBookFromCart}/>)}
-                </List>}
-                on='click'
-                hideOnScroll
-            />
 
-        </Menu.Menu>
-    </Menu>;
+            <Menu.Menu position='right'>
+                <Menu.Item name='sum'>
+                    Итого&nbsp;<b>{sum}</b>&nbsp;руб.
+                </Menu.Item>
+                <Popup
+                    style={style}
+                    trigger={
+                        <Menu.Item name='cart'>
+                            Корзина&nbsp;<b>({length})</b>
+                        </Menu.Item>
+                    }
+                    content={<List selection divided verticalAlign='middle'>
+                        {items.map(item =>
+                            <CartComponent book={item} key={`cart-${item.id}`}
+                                           removeBookFromCart={removeBookFromCart}/>)}
+                    </List>}
+                    on='click'
+                    hideOnScroll
+                />
+
+            </Menu.Menu>
+        </Menu>
+    </Sticky>;
 
 export {MainMenu};
 
